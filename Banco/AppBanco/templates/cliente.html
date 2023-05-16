@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>nombre</th>
+                <th>apellido</th>
+                <th>correo</th>
+                <th>telefono</th>
+                <th>direccion</th>
+                <th>genero</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in object_list %}
+            <tr>
+                <td>{{ i.documento }}</td>
+                <td>{{ i.nombre }}</td>
+                <td>{{ i.apellido }}</td>
+                <td>{{ i.correo }}</td>
+                <td>{{ i.telefono }}</td>
+                <td>{{ i.direccion }}}</td>
+                <td>{{i.genero }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</body>
+</html>
