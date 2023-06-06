@@ -41,9 +41,9 @@ class ListadoCreditos(ListView):
 
 class ListadoClientes(View):
     def get(self,request):
-        datos:Cliente.objects.all().values()
+        datos=Cliente.objects.all().values()
         datoscli=list(datos)
-        return JsonResponse(datoscli,safe=False)
+        return render(request,'cliente.html',{'datos':datoscli})
 
 
 class InsertarCliente(View):
@@ -51,18 +51,18 @@ class InsertarCliente(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     def post(self,request):
-        datos=json.loads(request.body)
-        request.POST.GET('documento')
-        request.POST.GET('nombre')
-        request.POST.GET('apellido')
-        request.POST.GET('correo')
-        request.POST.GET('telefono')
-        request.POST.GET('direccion')
-        request.POST.GET('genero')
+        """ datos=json.loads(request.body) """
+        Documento=request.POST.get('documento')
+        Nombre=request.POST.get('nombre')
+        Apellido=request.POST.get('apellido')
+        Correo=request.POST.get('correo')
+        Telefono=request.POST.get('telefono')
+        Direccion=request.POST.get('direccion')
+        Genero=request.POST.get('genero')
 
-        cli=Cliente.objects.create(documento=datos['documento'],nombre=datos['nombre'],apellido=datos['apellido'],correo=datos['correo'],telefono=datos['telefono'],direccion=datos['direccion'],genero=datos['genero'],)
+        cli=Cliente.objects.create(documento=Documento,nombre=Nombre,apellido=Apellido,correo=Correo,telefono=Telefono,direccion=Direccion,genero=Genero,)
         cli.save()
-        return JsonResponse({'mensaje':'datos guardados'})
+        return render(request,'form.html',{'mensaje':'Datos guardados'})
 
 
 class ActualizarCliente(View):
@@ -74,7 +74,7 @@ class ActualizarCliente(View):
         try:
             registro=Cliente.objects.get(pk=pk)
         except Cliente.DoesNotExist:
-            return JsonResponse({"error":"el documento no exoste"})
+            return JsonResponse({"error":"el documento no existe"})
         data=json.loads(request.body)
         registro.nombre=data.get('nombre')
         registro.nombre=data.get('apellido')
@@ -101,51 +101,5 @@ class Eliminar(View):
         return JsonResponse({'mensaje':'dato eliminado'})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def formularioInsertar(request):
+    return render(request,"form.html")        
