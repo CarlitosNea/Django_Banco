@@ -1,27 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="{% static 'gestionClientes.js' %}"></script>
     <title>Document</title>
 </head>
 <body>
-    <form action="">
+    <form action="/insertar/" method="post" id="form_insertar">
+        {% csrf_token %}
         <label for="documento">Documento</label>
-        <input type="text" name="documento" id="">
+        <input type="text" name="documento" id="documento">
         <label for="nombre">Nombre</label>
-        <input type="text" name="nombre" id="">
+        <input type="text" name="nombre" id="nombre">
         <label for="apellido">Apellido</label>
-        <input type="text" name="apellido" id="">
+        <input type="text" name="apellido" id="apellido">
         <label for="correo">Correo</label>
-        <input type="text" name="correo" id="">
+        <input type="text" name="correo" id="correo">
         <label for="telefono">Telefono</label>
-        <input type="text" name="telefono" id="">
+        <input type="text" name="telefono" id="telefono">
         <label for="direccion">Direccion</label>
-        <input type="text" name="direccion" id="">
+        <input type="text" name="direccion" id="direccion">
         <label for="genero">Genero</label>
-        <input type="text" name="genero" id="">
+        <input type="text" name="genero" id="genero">
         <input type="submit" value="guardar">
     </form>
 </body>

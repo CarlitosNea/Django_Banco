@@ -51,19 +51,21 @@ class InsertarCliente(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     def post(self,request):
-        """ datos=json.loads(request.body) """
-        Documento=request.POST.get('documento')
-        Nombre=request.POST.get('nombre')
-        Apellido=request.POST.get('apellido')
-        Correo=request.POST.get('correo')
-        Telefono=request.POST.get('telefono')
-        Direccion=request.POST.get('direccion')
-        Genero=request.POST.get('genero')
-
+        try: 
+            datos=json.loads(request.body)
+        except(json.JSONDecodeError,UnicodeDecodeError):
+            return JsonResponse({"error":"error :("})
+        Documento=datos.get('documento')
+        Nombre=datos.get('nombre')
+        Apellido=datos.get('apellido')
+        Correo=datos.get('correo')
+        Telefono=datos.get('telefono')
+        Direccion=datos.get('direccion')
+        Genero=datos.get('genero')
         cli=Cliente.objects.create(documento=Documento,nombre=Nombre,apellido=Apellido,correo=Correo,telefono=Telefono,direccion=Direccion,genero=Genero,)
         cli.save()
-        return render(request,'form.html',{'mensaje':'Datos guardados'})
-
+        """ return render(request,'form.html',{'mensaje':'Datos guardados'}) """
+        return JsonResponse({"mensaje":"datos guardaros"})
 
 class ActualizarCliente(View):
     @method_decorator(csrf_exempt)
