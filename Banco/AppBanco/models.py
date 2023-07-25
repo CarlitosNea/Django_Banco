@@ -1,7 +1,6 @@
-from django.db import models
-
 # Create your models here.
-
+from django.conf import settings
+from django.contrib.auth.models import *
 from django.db import models
 from .enum import plazo
 
@@ -15,14 +14,20 @@ class Usuario(models.Model):
 
 
 class Cliente(models.Model):
-    documento=models.TextField(max_length=10,primary_key=True)
+    #documento = models.OneToOneField(User, on_delete=models.CASCADE,max_length=10, primary_key=True)
+    documento = models.TextField(max_length=10, null=False, primary_key=True)
     nombre=models.TextField(max_length=20)
     apellido=models.TextField(max_length=20)
     correo=models.EmailField(max_length=254)
     telefono=models.TextField(max_length=20)
     direccion=models.TextField(max_length=20)
     genero=models.TextField(max_length=10)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cliente',null=True)
 
+class User(AbstractUser):
+    rol = models.CharField(max_length=100)
+    imagen = models.ImageField(default="", upload_to='img/', null=True, blank=True)
+    documento = models.TextField(max_length=30, primary_key=True)
 
 class Lineas_de_credito(models.Model):
     codigo=models.PositiveSmallIntegerField(verbose_name="Codigo",primary_key=True)
