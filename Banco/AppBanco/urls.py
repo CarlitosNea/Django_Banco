@@ -1,6 +1,6 @@
 from django.urls import path
 from AppBanco.views import *
-from AppBanco.viewsLogin import RegistrarUsuarioView
+from AppBanco.viewsLogin import *
 from . import views
 
 
@@ -19,5 +19,6 @@ urlpatterns = [
     path('actualizar/<pk>',ActualizarCliente.as_view(),name="actualizar"),
     path('eliminar/<pk>',Eliminar.as_view(),name="eliminar"),
     path('formularioInsertar',views.formularioInsertar,name='insertar'),
-    path('registro/',RegistrarUsuarioView.as_view(), name="registrar_usuario")
+    path('registro/',RegistrarUsuarioView.as_view(), name="registrar_usuario"),
+    path('iniciarSesion/', IniciarSesionView.as_view(),name='iniciar_sesion')
 ]

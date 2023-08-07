@@ -22,12 +22,11 @@ class Cliente(models.Model):
     telefono=models.TextField(max_length=20)
     direccion=models.TextField(max_length=20)
     genero=models.TextField(max_length=10)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cliente',null=True)
 
 class User(AbstractUser):
     rol = models.CharField(max_length=100)
     imagen = models.ImageField(default="", upload_to='img/', null=True, blank=True)
-    documento = models.TextField(max_length=30, primary_key=True)
+    documento = models.OneToOneField(Cliente, on_delete=models.CASCADE, primary_key=True)
 
 class Lineas_de_credito(models.Model):
     codigo=models.PositiveSmallIntegerField(verbose_name="Codigo",primary_key=True)
