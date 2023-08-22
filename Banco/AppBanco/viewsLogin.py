@@ -9,6 +9,8 @@ from django.contrib import messages
 import json
 from .models import *
 from .forms import *
+from django.contrib.auth.decorators import * 
+from .formsCliente import *
 
 
 
@@ -31,10 +33,20 @@ class RegistrarUsuarioView(View):
                 print("no json")
                 form = UserForm(request.POST)
                 if form.is_valid():
-                    form.save()
-                    messages.success(request, 'Usuario registrado correctamente desde formulario HTML.')
-                    return redirect('iniciar_sesion')
+                    print("form valid")
+                    if form.cleaned_data['imagen'] or form.cleaned_data['imagen'] is None:
+                        print("is none")
+                        form.save()
+                        imagen_file = request.FILES['imagen']
+
+                        user_instance = form.save(commit=False)
+                        user_instance.imagen = imagen_file
+                        user_instance.save()
+
+                        messages.success(request, 'registrado desde html')
+                        return redirect("iniciar_sesion")
                 else:
+                    print("EERRR")
                     messages.error(request, 'Error al registrar el usuario desde formulario HTML.')
         else:
             print("no metodo")
@@ -75,37 +87,51 @@ class IniciarSesionView(View):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-
             datt = authenticate(username = username, password=password)
 
             if datt is not None:
                 login(request, datt)
                 if datt.rol == 'Cliente':
-                    try:
-                        documento = datt.documento_id
-                        print("000000000000", documento)
-
-                        cliente =  Cliente.objects.get(documento=documento)
-
-                        if request.method == "POST" and 'editar' in request.POST:
-                            print("entrando a clientes")
-                            cliente_form = UserForm(request.POST, instance=cliente)
-                            if cliente_form.is_valid():
-                                cliente_form.save()
-                                messages.success(request, 'cambios guardados')
-                                return redirect('frmCliente')
-                            else:
-                                messages.error(request, 'corregir errores')
-                        else:
-                            cliente_form = UserForm(instance=cliente)
-                        return render(request, 'no se encontro el cliente')
-                    except Cliente.DoesNotExist:
-                        messages.error(request, 'no se encontro el cliente')
+                    return redirect('insertarf')
                 else:
-                    return redirect('clientes')
-            form.add_error(None, 'intentar nuevamente')
-        return render(request, 'iniciosesion.html', {'form':form})
-    
+                    form.add_error(None, 'Credenciales inválidas. Por favor, intenta nuevamente.')
+
+
+@method_decorator(login_required(login_url='iniciar_sesion'), name='dispatch')
+class PerfilClienteView(View):
+    template_name = 'actCliente.html'
+
+    def get(self, request):
+        try:
+            cliente = Cliente.objects.get(documento=request.user.documento_id)
+            usuario = request.user
+            print(usuario.imagen)
+        except Cliente.DoesNotExist:
+            messages.error(request, 'No se encontraron los datos del cliente.')
+            return redirect('iniciar_sesion')
+
+        form = ClienteForm(instance=cliente)
+        return render(request, self.template_name, {'form': form, 'cliente': cliente, 'usuario':usuario})
+
+    def post(self, request):
+        try:
+            cliente = Cliente.objects.get(documento=request.user.documento_id)
+        except Cliente.DoesNotExist:
+            messages.error(request, 'No se encontraron los datos del cliente.')
+            return redirect('iniciar_sesion')
+
+        form = ClienteForm(request.POST, instance=cliente)
+
+        if form.is_valid():
+            form.save()
+
+            messages.success(request, 'Cambios guardados correctamente.')
+            return redirect('clientes')
+
+        return render(request, self.template_name, {'form': form, 'cliente': cliente})
+
 
 def frmCliente(request):
     return render(request, "actcliente.html")
+
+

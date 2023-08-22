@@ -25,7 +25,7 @@ class Cliente(models.Model):
 
 class User(AbstractUser):
     rol = models.CharField(max_length=100)
-    imagen = models.ImageField(default="", upload_to='img/', null=True, blank=True)
+    imagen = models.ImageField(upload_to='img/', null=True, blank=True)
     documento = models.OneToOneField(Cliente, on_delete=models.CASCADE, primary_key=True)
 
 class Lineas_de_credito(models.Model):

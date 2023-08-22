@@ -7,11 +7,17 @@
 </head>
 <body>
     {% if form %}
-        <form action="" method="post">
+        <h1>imformacion del cliente</h1>
+        <form action="" method="POST">
             {% csrf_token %}
             {{ form.as_div }}
             <button type="submit" name="editar" value="editar">Guardar cambios</button>
         </form>
+        <div>Nombre usuario : {{ usuario.username }}</div>
+        <div>rol: {{ usuario.rol }}</div>
+        {% if usuario.imagen %}
+            <img src="{{ usuario.imagen.url }}" alt="imagen de usuario">
+        {% endif %}
     {% else %}
         <div>no se encontro el cliente</div>
     {% endif %}

@@ -8,6 +8,7 @@ from django.http import *
 from django.utils.decorators import *
 from django.views.decorators.csrf import *
 import json
+from django.contrib.auth.decorators import *
 
 
 # Create your views here.
@@ -50,7 +51,10 @@ class InsertarCliente(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
+    
+    @method_decorator(login_required)
     def post(self,request):
+    
         try: 
             datos=json.loads(request.body)
         except(json.JSONDecodeError,UnicodeDecodeError):
@@ -92,7 +96,7 @@ class ActualizarCliente(View):
 class Eliminar(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-
+    
     def delete(self,request,pk):
         try:
             registro=Cliente.objects.get(pk=pk)
@@ -101,6 +105,9 @@ class Eliminar(View):
         
         registro.delete()
         return JsonResponse({'mensaje':'dato eliminado'})
+    
+
+
 
 
 def formularioInsertar(request):
