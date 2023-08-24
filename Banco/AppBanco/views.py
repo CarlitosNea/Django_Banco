@@ -52,7 +52,7 @@ class InsertarCliente(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     
-    @method_decorator(login_required)
+    """ @method_decorator(login_required) """
     def post(self,request):
     
         try: 
